@@ -118,7 +118,7 @@ TEMPLATES = [{
         'debug': DEBUG,
         'context_processors': context_processors,
         'loaders': loaders,
-        'string_if_invalid': '<< MISSING VARIABLE "%s" >>' if DEBUG else ''}}]
+            'string_if_invalid': '<< MISSING VARIABLE "%s" >>' if DEBUG else ''}}]
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -383,7 +383,6 @@ GRAPHENE = {
 
 SITE_SETTINGS_ID = 1
 
-<<<<<<< HEAD
 AUTHENTICATION_BACKENDS = [
     'saleor.registration.backends.facebook.CustomFacebookOAuth2',
     'saleor.registration.backends.google.CustomGoogleOAuth2',

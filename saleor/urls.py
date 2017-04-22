@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
@@ -20,6 +21,8 @@ from .userprofile.urls import urlpatterns as userprofile_urls
 
 urlpatterns = [
     url(r'^', include(core_urls)),
+    url(r'^admin/', admin.site.urls),
+    url(r'^account/', include(registration_urls)),
     url(r'^account/', include(registration_urls)),
     url(r'^cart/', include(cart_urls, namespace='cart')),
     url(r'^checkout/', include(checkout_urls, namespace='checkout')),

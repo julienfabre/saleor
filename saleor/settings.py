@@ -142,6 +142,7 @@ INSTALLED_APPS = [
     'storages',
 
     # Django modules
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -171,6 +172,7 @@ INSTALLED_APPS = [
     'babeldjango',
     'bootstrap3',
     'django_prices',
+    'django_prices_vatlayer',
     'django_prices_openexchangerates',
     'emailit',
     'graphene_django',
@@ -402,3 +404,5 @@ SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, email'}
+
+VATLAYER_ACCESS_KEY = os.environ.get('VATLAYER_ACCESS_KEY', '')

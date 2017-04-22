@@ -173,7 +173,6 @@ INSTALLED_APPS = [
     'babeldjango',
     'bootstrap3',
     'django_prices',
-    'django_prices_vatlayer',
     'django_prices_openexchangerates',
     'django_prices_vatlayer',
     'emailit',

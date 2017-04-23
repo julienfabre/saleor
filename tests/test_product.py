@@ -6,11 +6,14 @@ import pytest
 
 from django.core.urlresolvers import reverse
 from django.utils.encoding import smart_text
+from django.utils.six import iterkeys
 
 from saleor.cart.models import Cart
 from saleor.cart import CartStatus, utils
 from saleor.product import models
-from saleor.product.utils import get_availability, get_attributes_display_map
+from saleor.product.utils import get_attributes_display_map
+from saleor.product.utils import (get_availability, get_variant_picker_data,
+                                  get_product_attributes_data)
 from tests.utils import filter_products_by_attribute
 
 
@@ -324,3 +327,19 @@ def test_variant_price_without_vatlayer_key(product_in_stock, vat, settings):
     price = variant.get_price_per_item(country='AT').quantize(2)
     expected = Price(net=10, gross=10, currency=price.currency)
     assert price == expected
+
+
+def test_variant_picker_data_with_translations(
+        product_in_stock, translated_variant, settings):
+    settings.LANGUAGE_CODE = 'fr'
+    variant_picker_data = get_variant_picker_data(product_in_stock)
+    attribute = variant_picker_data['variantAttributes'][0]
+    assert attribute['name'] == translated_variant.name
+
+
+def test_get_product_attributes_data_translation(
+        product_in_stock, settings, translated_product_attribute):
+    settings.LANGUAGE_CODE = 'fr'
+    attributes_data = get_product_attributes_data(product_in_stock)
+    attributes_keys = [attr.name for attr in iterkeys(attributes_data)]
+    assert translated_product_attribute.name in attributes_keys

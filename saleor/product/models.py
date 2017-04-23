@@ -21,6 +21,7 @@ from satchless.item import InsufficientStock, Item, ItemRange
 from text_unidecode import unidecode
 from versatileimagefield.fields import VersatileImageField, PPOIField
 
+from ..core.utils import TranslationProxy
 from ..discount.models import calculate_discounted_price
 from ..search import index
 from .utils import get_attributes_display_map, get_price_with_vat
@@ -137,6 +138,7 @@ class Product(models.Model, ItemRange, index.Indexed):
         pgettext_lazy('Product field', 'is featured'), default=False)
 
     objects = ProductManager()
+    translated = TranslationProxy()
 
     search_fields = [
         index.SearchField('name', partial_match=True),
@@ -206,6 +208,27 @@ class Product(models.Model, ItemRange, index.Indexed):
                 discounts=discounts, **kwargs)
 
 
+class ProductTranslation(models.Model):
+    language_code = models.CharField(
+        max_length=50, verbose_name=pgettext_lazy('Product field', 'language code'))
+    product = models.ForeignKey(
+        Product, related_name='translations',
+        verbose_name=pgettext_lazy('Product field', 'product'))
+    name = models.CharField(
+        pgettext_lazy('Product field', 'name'), max_length=128)
+    description = models.TextField(
+        verbose_name=pgettext_lazy('Product field', 'description'))
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        class_ = type(self)
+        return '<%s.%s(pk=%r, name=%r, product_pk=%r)>' % (
+            class_.__module__, class_.__name__, self.pk, self.name,
+            self.product_id)
+
+
 @python_2_unicode_compatible
 class ProductVariant(models.Model, Item):
     sku = models.CharField(
@@ -223,6 +246,8 @@ class ProductVariant(models.Model, Item):
     images = models.ManyToManyField(
         'ProductImage', through='VariantImage',
         verbose_name=pgettext_lazy('Product variant field', 'images'))
+
+    translated = TranslationProxy()
 
     class Meta:
         app_label = 'product'
@@ -288,7 +313,7 @@ class ProductVariant(models.Model, Item):
             return smart_text(self.sku)
 
     def display_product(self):
-        return '%s (%s)' % (smart_text(self.product),
+        return '%s (%s)' % (smart_text(self.product.translated),
                             smart_text(self))
 
     def get_first_image(self):
@@ -307,6 +332,26 @@ class ProductVariant(models.Model, Item):
         stock = self.select_stockrecord()
         if stock:
             return stock.cost_price
+
+
+class ProductVariantTranslation(models.Model):
+    language_code = models.CharField(
+        max_length=35, verbose_name=pgettext_lazy('Product variant field', 'language code'))
+    product_variant = models.ForeignKey(
+        ProductVariant, related_name='translations',
+        verbose_name=pgettext_lazy('Product variant field', 'product variant'))
+    name = models.CharField(
+        pgettext_lazy('Product variant field', 'variant name'), max_length=100,
+        blank=True)
+
+    def __repr__(self):
+        class_ = type(self)
+        return '<%s.%s(pk=%r, name=%r, variant_pk=%r)>' % (
+            class_.__module__, class_.__name__, self.pk, self.name,
+            self.product_variant_id)
+
+    def __str__(self):
+        return self.name or str(self.product_variant)
 
 
 @python_2_unicode_compatible
@@ -374,6 +419,8 @@ class ProductAttribute(models.Model):
         pgettext_lazy('Product attribute field', 'display name'),
         max_length=100)
 
+    translated = TranslationProxy()
+
     class Meta:
         ordering = ('slug', )
         verbose_name = pgettext_lazy('Product attribute model', 'product attribute')
@@ -389,18 +436,40 @@ class ProductAttribute(models.Model):
         return self.values.exists()
 
 
+class ProductAttributeTranslation(models.Model):
+    language_code = models.CharField(
+        max_length=35, verbose_name=pgettext_lazy('Product attribute field', 'language code'))
+    product_attribute = models.ForeignKey(
+        ProductAttribute, related_name='translations',
+        verbose_name=pgettext_lazy('Product attribute field', 'product attribute'))
+    name = models.CharField(
+        pgettext_lazy('Product attribute field', 'display name'),
+        max_length=100)
+
+    def __repr__(self):
+        class_ = type(self)
+        return '<%s.%s(pk=%r, name=%r, attribute_pk=%r)>' % (
+            class_.__module__, class_.__name__, self.pk, self.name,
+            self.product_attribute_id)
+
+    def __str__(self):
+        return self.name
+
+
 @python_2_unicode_compatible
 class AttributeChoiceValue(models.Model):
     name = models.CharField(
-        pgettext_lazy('Attribute choice value field', 'display name'),
+        pgettext_lazy('Attribute choice value model', 'display name'),
         max_length=100)
     slug = models.SlugField()
     color = models.CharField(
-        pgettext_lazy('Attribute choice value field', 'color'),
+        pgettext_lazy('Attribute choice value model', 'color'),
         max_length=7,
         validators=[RegexValidator('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$')],
         blank=True)
     attribute = models.ForeignKey(ProductAttribute, related_name='values')
+
+    translated = TranslationProxy()
 
     class Meta:
         unique_together = ('name', 'attribute')
@@ -410,6 +479,26 @@ class AttributeChoiceValue(models.Model):
         verbose_name_plural = pgettext_lazy(
             'Attribute choice value model',
             'attribute choices values')
+
+    def __str__(self):
+        return self.name
+
+
+class AttributeChoiceValueTranslation(models.Model):
+    language_code = models.CharField(
+        max_length=35, verbose_name=pgettext_lazy('Attribute choice value model', 'language code'))
+    attribute_choice_value = models.ForeignKey(
+        AttributeChoiceValue, related_name='translations',
+        verbose_name=pgettext_lazy('Attribute choice value model', 'product attribute'))
+    name = models.CharField(
+        pgettext_lazy('Attribute choice value model', 'display name'),
+        max_length=100)
+
+    def __repr__(self):
+        class_ = type(self)
+        return '<%s.%s(pk=%r, name=%r, attribute_chiuce_value_pk=%r)>' % (
+            class_.__module__, class_.__name__, self.pk, self.name,
+            self.attribute_choice_value_id)
 
     def __str__(self):
         return self.name

@@ -15,7 +15,8 @@ from saleor.discount.models import Voucher, Sale
 from saleor.order.models import Order, OrderedItem, DeliveryGroup
 from saleor.product.models import (AttributeChoiceValue, Category, Product,
                                    ProductAttribute, ProductClass,
-                                   ProductVariant, Stock, StockLocation)
+                                   ProductVariant, ProductAttributeTranslation,
+                                   Stock, StockLocation)
 from saleor.shipping.models import ShippingMethod
 from saleor.site.models import SiteSettings, AuthorizationKey
 from saleor.userprofile.models import Address, User
@@ -284,3 +285,19 @@ def vat(db):
     data = {'country_name': 'Austria', 'standard_rate': 20,
             'reduced_rates': {'foodstuffs': 10, 'books': 10}}
     return VAT.objects.create(country_code='AT', data=data)
+
+
+@pytest.fixture
+def translated_variant(db, product_in_stock):
+    attribute = product_in_stock.product_class.variant_attributes.first()
+    return ProductAttributeTranslation.objects.create(
+        language_code='fr', product_attribute=attribute,
+        name='Name tranlsated to french')
+
+
+@pytest.fixture
+def translated_product_attribute(db, product_in_stock):
+    attribute = product_in_stock.product_class.product_attributes.first()
+    return ProductAttributeTranslation.objects.create(
+        language_code='fr', product_attribute=attribute,
+        name='Name tranlsated to french')

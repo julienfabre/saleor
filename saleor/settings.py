@@ -5,9 +5,9 @@ import os.path
 
 import dj_database_url
 import dj_email_url
-from django.contrib.messages import constants as messages
 import django_cache_url
-
+from django.contrib.messages import constants as messages
+from django.utils.translation import ugettext_lazy as _
 
 DEBUG = ast.literal_eval(os.environ.get('DEBUG', 'True'))
 
@@ -40,6 +40,9 @@ DATABASES = {
 
 TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
+LANGUAGES = [
+    ('en', _('English'))
+]
 LOCALE_PATHS = [os.path.join(PROJECT_ROOT, 'locale')]
 USE_I18N = True
 USE_L10N = True

@@ -27,6 +27,7 @@ def index(request, cart):
         form = ReplaceCartLineForm(None, cart=cart, variant=line.variant,
                                    initial=initial, discounts=discounts)
         cart_lines.append({
+            'product': line.variant.product.translated,
             'variant': line.variant,
             'get_price_per_item': line.get_price_per_item(
                 discounts, country=country),
@@ -128,7 +129,7 @@ def summary(request, cart):
         line_total = line.get_total(discounts=request.discounts,
                                     country=country)
         return {
-            'product': line.variant.product,
+            'product': line.variant.product.translated,
             'variant': line.variant.name,
             'quantity': line.quantity,
             'attributes': line.variant.display_variant(attributes),

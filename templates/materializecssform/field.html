@@ -86,7 +86,7 @@
           {% trans "(optional)" context "Dashboard form labels" %}
         {% endif %}
       </label>
-      <input type="date" id="{{ field.auto_id }}" class="datepicker" name="{{ field.name }}"
+      <input type="date" id="{{ field.auto_id }}" class="datepicker" name="{{ field.html_name }}"
         value="{% if field.value %}{{ field.value|date:"Y-m-d" }}{% endif %}" data-value="{% if field.value %}{{ field.value|date:"Y-m-d" }}{% endif %}">
       {% for error in field.errors %}
         <p class="help-block materialize-red-text">
@@ -150,7 +150,7 @@
 {% elif field|is_textarea %}
   <div class="input input-field col {{ classes.label }}">
     <textarea id="{{ field.auto_id }}" class="materialize-textarea {{ field.field.widget.attrs.class }}"
-    name="{{ field.name }}">
+    name="{{ field.html_name }}">
       {% if field.value %}
         {{ field.value }}
       {% endif %}
@@ -203,9 +203,9 @@
           {% trans "File" %}
         </span>
         <input class="file-chooser" id="{{ field.auto_id }}_0"
-        name="{{ field.name }}_0" type="file">
+        name="{{ field.html_name }}_0" type="file">
         <input class="ppoi-input" id="{{ field.auto_id }}_1"
-        name="{{ field.name }}_1" type="hidden">
+        name="{{ field.html_name }}_1" type="hidden">
       </div>
       <div class="file-path-wrapper">
         <input class="file-path" type="text">

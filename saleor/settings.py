@@ -5,9 +5,9 @@ import os.path
 
 import dj_database_url
 import dj_email_url
-import django_cache_url
 from django.contrib.messages import constants as messages
-from django.utils.translation import ugettext_lazy as _
+import django_cache_url
+
 
 DEBUG = ast.literal_eval(os.environ.get('DEBUG', 'True'))
 
@@ -40,14 +40,12 @@ DATABASES = {
 
 TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
-LANGUAGES = [
-    ('en', _('English'))
-]
 LOCALE_PATHS = [os.path.join(PROJECT_ROOT, 'locale')]
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 EMAIL_URL = os.environ.get('EMAIL_URL')
 SENDGRID_USERNAME = os.environ.get('SENDGRID_USERNAME')
@@ -68,7 +66,6 @@ EMAIL_USE_SSL = email_config['EMAIL_USE_SSL']
 
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 ORDER_FROM_EMAIL = os.getenv('ORDER_FROM_EMAIL', DEFAULT_FROM_EMAIL)
-
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL = '/media/'
@@ -102,7 +99,6 @@ context_processors = [
     'saleor.core.context_processors.webpage_schema',
     'social_django.context_processors.backends',
     'social_django.context_processors.login_redirect',
-    'saleor.core.context_processors.country_form',
 ]
 
 loaders = [
@@ -121,7 +117,7 @@ TEMPLATES = [{
         'debug': DEBUG,
         'context_processors': context_processors,
         'loaders': loaders,
-            'string_if_invalid': '<< MISSING VARIABLE "%s" >>' if DEBUG else ''}}]
+        'string_if_invalid': '<< MISSING VARIABLE "%s" >>' if DEBUG else ''}}]
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -146,7 +142,6 @@ INSTALLED_APPS = [
     'storages',
 
     # Django modules
-    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -155,6 +150,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.auth',
     'django.contrib.postgres',
+    'django.forms',
 
     # Local apps
     'saleor.userprofile',
@@ -177,12 +173,9 @@ INSTALLED_APPS = [
     'bootstrap3',
     'django_prices',
     'django_prices_openexchangerates',
-    'django_prices_vatlayer',
-    'emailit',
     'graphene_django',
     'mptt',
     'payments',
-    'materializecssform',
     'rest_framework',
     'webpack_loader',
     'social_django',
@@ -408,5 +401,3 @@ SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, email'}
-
-VATLAYER_ACCESS_KEY = os.environ.get('VATLAYER_ACCESS_KEY', None)

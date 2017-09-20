@@ -1,4 +1,3 @@
-from allauth.account.forms import LoginForm
 from django.shortcuts import redirect, get_object_or_404
 from django.template.response import TemplateResponse
 

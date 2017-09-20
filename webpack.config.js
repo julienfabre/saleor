@@ -11,7 +11,7 @@ var extractTextPlugin;
 var fileLoaderPath;
 var output;
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'productionnn') {
   output = {
     path: resolve('saleor/static/assets/'),
     filename: '[name].[chunkhash].js',

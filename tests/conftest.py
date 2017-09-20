@@ -280,6 +280,7 @@ def authorization_key(db, site_settings):
         password='Password')
 
 
+@pytest.fixture
 def vat(db):
     data = {'country_name': 'Austria', 'standard_rate': 20,
             'reduced_rates': {'foodstuffs': 10, 'books': 10}}

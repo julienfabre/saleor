@@ -38,8 +38,8 @@ DATABASES = {
         conn_max_age=600)}
 
 
-TIME_ZONE = 'America/Chicago'
-LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Europe/Berlin'
+LANGUAGE_CODE = 'en-gb'
 LOCALE_PATHS = [os.path.join(PROJECT_ROOT, 'locale')]
 USE_I18N = True
 USE_L10N = True

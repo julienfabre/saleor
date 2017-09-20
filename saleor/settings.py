@@ -175,7 +175,6 @@ INSTALLED_APPS = [
     'django_prices',
     'django_prices_openexchangerates',
     'django_prices_vatlayer',
-    'emailit',
     'graphene_django',
     'mptt',
     'payments',

@@ -99,6 +99,7 @@ context_processors = [
     'saleor.core.context_processors.webpage_schema',
     'social_django.context_processors.backends',
     'social_django.context_processors.login_redirect',
+    'saleor.core.context_processors.country_form',
 ]
 
 loaders = [
@@ -173,6 +174,8 @@ INSTALLED_APPS = [
     'bootstrap3',
     'django_prices',
     'django_prices_openexchangerates',
+    'django_prices_vatlayer',
+    'emailit',
     'graphene_django',
     'mptt',
     'payments',
@@ -401,3 +404,5 @@ SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, email'}
+
+VATLAYER_ACCESS_KEY = os.environ.get('VATLAYER_ACCESS_KEY', None)

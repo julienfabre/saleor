@@ -140,6 +140,9 @@
                 <div class="row">
                   {{ product_form.price|materializecss }}
                 </div>
+                <div class="row">
+                  {{ product_form.mass|materializecss }}
+                </div>
                 {% if not product.product_class.has_variants %}
                   <div class="row">
                     {{ variant_form.sku|materializecss }}

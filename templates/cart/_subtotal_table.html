@@ -38,16 +38,18 @@
           </div>
         </div>
       </div>
-      <div class="col-5">
+       <div class="col-5">
         <div class="row">
           <div class="col-md-12 col-12 text-right">
             <p class="cart__delivery-info__price">
               {% if default_country_options %}
-                {% price_range default_country_options %}
+                {# hide fixed standard shipping price {% price_range default_country_options %} #}
               {% endif %}
+              {% trans "+ shipping" %}
             </p>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>

@@ -135,6 +135,8 @@ class Product(models.Model, ItemRange, index.Indexed):
         pgettext_lazy('Product field', 'updated at'), auto_now=True, null=True)
     is_featured = models.BooleanField(
         pgettext_lazy('Product field', 'is featured'), default=False)
+    mass = models.FloatField(
+        pgettext_lazy('Product field', 'mass in kg'), null=True)
 
     objects = ProductManager()
 
@@ -223,6 +225,8 @@ class ProductVariant(models.Model, Item):
     images = models.ManyToManyField(
         'ProductImage', through='VariantImage',
         verbose_name=pgettext_lazy('Product variant field', 'images'))
+    mass_override = models.FloatField(
+        pgettext_lazy('Product variant field', 'mass in kg'), null=True)
 
     class Meta:
         app_label = 'product'
@@ -231,6 +235,10 @@ class ProductVariant(models.Model, Item):
 
     def __str__(self):
         return self.name or self.display_variant()
+    
+    @property
+    def mass(self):
+        return self.mass_override or self.product.mass or 0
 
     def check_quantity(self, quantity):
         available_quantity = self.get_stock_quantity()

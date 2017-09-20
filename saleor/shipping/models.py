@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import pgettext_lazy
 from django_prices.models import PriceField
-from prices import PriceRange
+from prices import PriceRange, Price
 from django_countries import countries
 
 
@@ -95,8 +95,36 @@ class ShippingMethodCountry(models.Model):
         # https://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.get_FOO_display  # noqa
         return '%s %s' % (self.shipping_method, self.get_country_code_display())
 
-    def get_total(self):
-        return self.price
+    def get_total(self, partition=None, shipping_address=None):
+        """Calculate shipping price by mass and shipping address if partition is available"""
+        if partition:
+            # TODO: correct calulation, maybe with data from config file or with foreign key objects
+            # We ignore self.country_code and use shipping_address.country instead. We also ignore self.price:
+            eu = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DK', 'DE', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'HU',
+                        'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK']
+            import datetime, pytz
+            utc = pytz.timezone('UTC')
+            t_brexit = datetime.datetime(2019, 4, 1, 0, 0, 0, tzinfo=pytz.utc) # or whatever
+            if utc.localize(datetime.datetime.utcnow()) >= t_brexit:
+                eu.remove('GB')
+
+            cc = shipping_address.country
+            
+            # Determine the total mass of the partition:
+            mass = 0
+            for cart_line in partition:
+                mass += cart_line.quantity * cart_line.variant.mass
+            # Just an example: 1 €/kg for Germany, 1.5 €/kg for the rest of the EU and 2 €/kg for other countries:
+            if cc == 'DE':
+                shipping_price = Price(mass, currency=settings.DEFAULT_CURRENCY)
+            elif cc in eu:
+                shipping_price = Price(1.5 * mass, currency=settings.DEFAULT_CURRENCY)
+            else:
+                shipping_price = Price(2 * mass, currency=settings.DEFAULT_CURRENCY)
+            return shipping_price
+        # Standard behaviour just in case in order not to break things 
+        else:
+            return self.price
 
 
 class ShippingCountryQueryset(models.QuerySet):

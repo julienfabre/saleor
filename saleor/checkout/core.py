@@ -100,7 +100,7 @@ class Checkout(object):
         country = self._vat_country()
         for partition in self.cart.partition():
             if self.shipping_method and partition.is_shipping_required():
-                shipping_cost = self.shipping_method.get_total()
+                shipping_cost = self.shipping_method.get_total(partition, self.shipping_address)
             else:
                 shipping_cost = Price(0, currency=settings.DEFAULT_CURRENCY)
             total_with_shipping = partition.get_total(
@@ -297,7 +297,7 @@ class Checkout(object):
         for partition in self.cart.partition():
             shipping_required = partition.is_shipping_required()
             if shipping_required:
-                shipping_price = self.shipping_method.get_total()
+                shipping_price = self.shipping_method.get_total(partition, self.shipping_address)
                 shipping_method_name = smart_text(self.shipping_method)
             else:
                 shipping_price = 0

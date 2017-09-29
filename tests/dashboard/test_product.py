@@ -109,7 +109,6 @@ def test_edit_used_product_class(db):
     assert 'has_variants' in form.errors.keys()
 
 
-@pytest.mark.xfail
 def test_change_attributes_in_product_form(db, product_in_stock,
                                            color_attribute):
     product = product_in_stock
@@ -125,7 +124,8 @@ def test_change_attributes_in_product_form(db, product_in_stock,
             'categories': [c.pk for c in product.categories.all()],
             'description': 'description',
             'attribute-author': new_author,
-            'attribute-color': new_color}
+            'attribute-color': new_color,
+            'mass': 1}
     form = ProductForm(data, instance=product)
     assert form.is_valid()
     product = form.save()

@@ -10,7 +10,7 @@ django-cache-url>=1.0.0
 django-countries>=4.1
 django-mptt>=0.7.1
 django-payments>=0.11.0,<0.12a0
-django-prices>=0.4.11,<0.5a0
+django-prices
 django-prices-openexchangerates>=0.1.12,<0.2a0
 django-prices-vatlayer>=0.1.0
 django-redis>=4.0.0
@@ -28,7 +28,7 @@ Markdown>=2.4
 maxminddb
 maxminddb-geolite2
 mock>=1.3.0
-prices>=0.5.7
+#prices>=0.5.7
 psycopg2>=2.6
 purl>=0.4.1
 pytest>=3.2.2

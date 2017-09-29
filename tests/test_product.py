@@ -391,4 +391,3 @@ def test_variant_availability_status(unavailable_product):
     stock.save()
     status = get_variant_availability_status(variant)
     assert status == VariantAvailabilityStatus.AVAILABLE
->>>>>>> 237c3f41eb7af6ed52f45968cf85b2d02bad4abe

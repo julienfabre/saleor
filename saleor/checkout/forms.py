@@ -56,7 +56,8 @@ class ShippingCountryChoiceField(forms.ModelChoiceField):
     widget = forms.RadioSelect()
 
     def label_from_instance(self, obj):
-        price_html = format_price(obj.price.gross, obj.price.currency)
+        # price_html = format_price(obj.price.gross, obj.price.currency)
+        price_html = ''
         label = mark_safe('%s %s' % (obj.shipping_method, price_html))
         return label
 

@@ -178,7 +178,6 @@ INSTALLED_APPS = [
     'graphene_django',
     'mptt',
     'payments',
-    'rest_framework',
     'webpack_loader',
     'social_django',
     'django_countries',
@@ -353,7 +352,7 @@ ES_URL = ELASTICSEARCH_URL or SEARCHBOX_URL or BONSAI_URL or ''
 if ES_URL:
     SEARCH_BACKENDS = {
         'default': {
-            'BACKEND': 'saleor.search.backends.elasticsearch2',
+            'BACKEND': 'saleor.search.backends.elasticsearch5',
             'URLS': [ES_URL],
             'INDEX': os.environ.get('ELASTICSEARCH_INDEX_NAME', 'storefront'),
             'TIMEOUT': 5,

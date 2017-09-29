@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import pgettext_lazy
@@ -10,13 +11,15 @@ from . import forms
 
 
 @staff_member_required
+@permission_required('discount.view_sale')
 def sale_list(request):
     sales = Sale.objects.prefetch_related('products')
     ctx = {'sales': sales}
-    return TemplateResponse(request, 'dashboard/discount/sale_list.html', ctx)
+    return TemplateResponse(request, 'dashboard/discount/sale/list.html', ctx)
 
 
 @staff_member_required
+@permission_required('discount.edit_sale')
 def sale_edit(request, pk=None):
     if pk:
         instance = get_object_or_404(Sale, pk=pk)
@@ -32,10 +35,11 @@ def sale_edit(request, pk=None):
         messages.success(request, msg)
         return redirect('dashboard:sale-update', pk=instance.pk)
     ctx = {'sale': instance, 'form': form}
-    return TemplateResponse(request, 'dashboard/discount/sale_form.html', ctx)
+    return TemplateResponse(request, 'dashboard/discount/sale/form.html', ctx)
 
 
 @staff_member_required
+@permission_required('discount.edit_sale')
 def sale_delete(request, pk):
     instance = get_object_or_404(Sale, pk=pk)
     if request.method == 'POST':
@@ -46,18 +50,20 @@ def sale_delete(request, pk):
         return redirect('dashboard:sale-list')
     ctx = {'sale': instance}
     return TemplateResponse(
-        request, 'dashboard/discount/sale_modal_confirm_delete.html', ctx)
+        request, 'dashboard/discount/sale/modal/confirm_delete.html', ctx)
 
 
 @staff_member_required
+@permission_required('discount.view_voucher')
 def voucher_list(request):
     vouchers = Voucher.objects.select_related('product', 'category')
     ctx = {'vouchers': vouchers}
     return TemplateResponse(
-        request, 'dashboard/discount/voucher_list.html', ctx)
+        request, 'dashboard/discount/voucher/list.html', ctx)
 
 
 @staff_member_required
+@permission_required('discount.edit_voucher')
 def voucher_edit(request, pk=None):
     if pk is not None:
         instance = get_object_or_404(Voucher, pk=pk)
@@ -95,10 +101,11 @@ def voucher_edit(request, pk=None):
         'voucher': instance, 'default_currency': settings.DEFAULT_CURRENCY,
         'form': voucher_form, 'type_base_forms': type_base_forms}
     return TemplateResponse(
-        request, 'dashboard/discount/voucher_form.html', ctx)
+        request, 'dashboard/discount/voucher/form.html', ctx)
 
 
 @staff_member_required
+@permission_required('discount.edit_voucher')
 def voucher_delete(request, pk):
     instance = get_object_or_404(Voucher, pk=pk)
     if request.method == 'POST':
@@ -109,4 +116,4 @@ def voucher_delete(request, pk):
         return redirect('dashboard:voucher-list')
     ctx = {'voucher': instance}
     return TemplateResponse(
-        request, 'dashboard/discount/voucher_modal_confirm_delete.html', ctx)
+        request, 'dashboard/discount/voucher/modal/confirm_delete.html', ctx)

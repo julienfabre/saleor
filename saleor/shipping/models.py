@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from itertools import groupby
 from operator import itemgetter
+from decimal import Decimal
 
 from django.conf import settings
 from django.db import models
@@ -116,11 +117,11 @@ class ShippingMethodCountry(models.Model):
                 mass += cart_line.quantity * cart_line.variant.mass
             # Just an example: 1 €/kg for Germany, 1.5 €/kg for the rest of the EU and 2 €/kg for other countries:
             if cc == 'DE':
-                shipping_price = Price(mass, currency=settings.DEFAULT_CURRENCY)
+                shipping_price = Price(Decimal(mass)*self.price.gross, currency=settings.DEFAULT_CURRENCY)
             elif cc in eu:
-                shipping_price = Price(1.5 * mass, currency=settings.DEFAULT_CURRENCY)
+                shipping_price = Price(Decimal(mass)*self.price.gross, currency=settings.DEFAULT_CURRENCY)
             else:
-                shipping_price = Price(2 * mass, currency=settings.DEFAULT_CURRENCY)
+                shipping_price = Price(Decimal(mass)*self.price.gross, currency=settings.DEFAULT_CURRENCY)
             return shipping_price
         # Standard behaviour just in case in order not to break things 
         else:

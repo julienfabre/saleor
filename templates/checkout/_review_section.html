@@ -24,7 +24,7 @@
         <p class="float-right">{% if checkout.shipping_method %}
           {% gross checkout.get_total_shipping %}
         {% else %}
-          &mdash;
+          {% trans "Shipping price at the end of checkout" %} 
         {% endif %}</p>
       </div>
     </div>

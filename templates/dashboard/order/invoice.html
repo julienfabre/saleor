@@ -11,46 +11,52 @@
 
 <h2>{% trans "Company Details" context "Order invoice" %}</h2>
 <table width="100%" border="1" cellspacing="0" cellpadding="10">
-<tr>
-    <th align="left" width="50%">{% trans "Shipping Details" %}</th>
-    <th align="left" width="50%">{% trans "Billing Details" %}</th>
-</tr>
-<tr>
-    <td valign="top">
-        <table border="0">
-        <div class="row">
-            <div class="col s12 m6 l12 p6">
-            {% with order.shipping_address as address %}
-              <div class="card">
-                <div class="card-content">
-                  <span class="card-title black-text">
-                    {% trans "Shipping address" context "" %}
-                  </span>
-                  {% include 'dashboard/includes/_address.html' with address=address only %}
+{% with order.is_shipping_required as shipping_required %}
+    <tr>
+        {% if shipping_required %}
+            <th align="left" width="50%">{% trans "Shipping Details" %}</th>
+        {% endif %}
+            <th align="left" width="50%">{% trans "Billing Details" %}</th>
+    </tr>
+    <tr>
+        {% if shipping_required %}
+            <td valign="top">
+                <table border="0">
+                <div class="row">
+                    <div class="col s12 m6 l12 p6">
+                    {% with order.shipping_address as address %}
+                      <div class="card">
+                        <div class="card-content">
+                          <span class="card-title black-text">
+                            {% trans "Shipping address" context "" %}
+                          </span>
+                          {% include 'dashboard/includes/_address.html' with address=address only %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endwith %}
+                </div>
+                </table>
+            </td>
+        {% endif %}
+        <td valign="top">
+            <table border="0">
+              <div class="col s12 {% if address %}m6{% else %}m12{% endif %} l12 p6">
+                <div class="card">
+                  <div class="card-content">
+                    {% with order.billing_address as address %}
+                      <span class="card-title black-text">
+                        {% trans "Billing address" context "" %}
+                      </span>
+                      {% include 'dashboard/includes/_address.html' with address=address only %}
+                    {% endwith %}
+                  </div>
                 </div>
               </div>
-            </div>
-          {% endwith %}
-        </div>
-        </table>
-    </td>
-    <td valign="top">
-        <table border="0">
-          <div class="col s12 {% if address %}m6{% else %}m12{% endif %} l12 p6">
-            <div class="card">
-              <div class="card-content">
-                {% with order.billing_address as address %}
-                  <span class="card-title black-text">
-                    {% trans "Billing address" context "" %}
-                  </span>
-                  {% include 'dashboard/includes/_address.html' with address=address only %}
-                {% endwith %}
-              </div>
-            </div>
-          </div>
-        </table>
-    </td>
-</tr>
+            </table>
+        </td>
+    </tr>
+{% endwith %}
 </table>
 
 <h2>{% trans "Items Ordered" context "Order invoice" %}</h2>

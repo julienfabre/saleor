@@ -42,11 +42,13 @@
         {% trans "PDF Invoice" context "Order detail action" %}
       </a>
     </li>
-    <li>
-      <a href="{% url "dashboard:order-packing-slips" order_pk=order.pk %}" data-href="" class="">
-        {% trans "Packing Slips" context "Order detail action" %}
-      </a>
-    </li>
+    {% if order.is_shipping_required %}
+        <li>
+            <a href="{% url "dashboard:order-packing-slips" order_pk=order.pk %}" data-href="" class="">
+                {% trans "Packing Slips" context "Order detail action" %}
+            </a>
+        </li>
+    {% endif %}
   </ul>
 {% endblock %}
 

@@ -99,6 +99,7 @@
             {% if availability.price_range_local_currency %}
               <br>
               <small class="text-info">
+              	&asymp;
                 {% gross availability.price_range_local_currency.min_price html=True %}
               </small>
             {% endif %}
